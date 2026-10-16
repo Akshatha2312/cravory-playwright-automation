@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment variables & local secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Authentication state & session tokens
+.auth/
+*.auth.json
+
+# Playwright artifacts & reports
+playwright-report/
+blob-report/
+test-results/
+playwright/.cache/
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

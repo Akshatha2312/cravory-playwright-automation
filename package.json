@@ -1,0 +1,37 @@
+{
+  "name": "cravory-playwright-automation",
+  "version": "1.0.0",
+  "description": "Standalone Playwright E2E automation testing suite for Cravory Marketplace",
+  "main": "playwright.config.js",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit --workers=2",
+    "test:cross-browser": "playwright test --project=firefox --project=webkit --workers=2",
+    "test:headed": "playwright test --headed",
+    "test:smoke": "playwright test tests/smoke",
+    "test:api": "playwright test tests/api",
+    "test:auth": "playwright test tests/auth",
+    "test:customer": "playwright test tests/customer",
+    "test:checkout": "playwright test tests/checkout",
+    "test:vendor-admin": "playwright test tests/vendor-admin",
+    "test:ui": "playwright test --ui",
+    "test:list": "playwright test --list",
+    "report": "playwright show-report"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "qa-automation",
+    "e2e",
+    "mern"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "dotenv": "^18.0.8"
+  }
+}

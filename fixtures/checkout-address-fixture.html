@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout - Cravory Marketplace (Isolated Test Fixture)</title>
+  <style>
+    :root {
+      --cravory-primary: #c2185b;
+      --cravory-primary-bg: #fff0f5;
+      --cravory-primary-light: #f48fb1;
+      --cravory-cocoa: #3e2723;
+      --cravory-text: #2d3748;
+      --cravory-text-secondary: #718096;
+      --cravory-text-tertiary: #a0aec0;
+      --cravory-surface-border: #e2e8f0;
+      --cravory-danger: #e53e3e;
+      --cravory-danger-bg: #fff5f5;
+      --cravory-success: #38a169;
+      --cravory-success-bg: #f0fff4;
+      --cravory-radius-md: 10px;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: #fcf8f6;
+      color: var(--cravory-text);
+      margin: 0;
+      padding: 24px 16px;
+    }
+    .cravory-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .header-banner {
+      background-color: #fff8f5;
+      background-image: linear-gradient(180deg, #fffaf8 0%, #fff0f4 100%);
+      border: 1px solid #fce4ec;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justifyContent: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    h1 {
+      font-size: 1.8rem;
+      color: var(--cravory-cocoa);
+      margin: 0 0 6px 0;
+    }
+    .cravory-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--cravory-primary-bg);
+      color: var(--cravory-primary);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+    }
+    @media (max-width: 860px) {
+      .checkout-grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1.5px solid var(--cravory-surface-border);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .section-heading {
+      font-size: 1.2rem;
+      color: var(--cravory-cocoa);
+      margin: 0;
+    }
+    .cravory-btn {
+      display: inline-block;
+      padding: 8px 16px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: var(--cravory-radius-md);
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .cravory-btn-primary {
+      background-color: var(--cravory-primary);
+      color: #ffffff;
+    }
+    .cravory-btn-secondary {
+      background-color: #f1f5f9;
+      color: var(--cravory-cocoa);
+      border: 1px solid var(--cravory-surface-border);
+    }
+    .cravory-btn-lg {
+      padding: 12px 20px;
+      font-size: 1rem;
+    }
+    .address-card {
+      border: 1.5px solid var(--cravory-surface-border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 12px;
+      background: #ffffff;
+      cursor: pointer;
+    }
+    .address-card.selected {
+      border-color: var(--cravory-primary);
+      background-color: var(--cravory-primary-bg);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .form-row-three {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--cravory-cocoa);
+      margin-bottom: 4px;
+    }
+    .cravory-input, .cravory-select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 12px;
+      border: 1.5px solid var(--cravory-surface-border);
+      border-radius: var(--cravory-radius-md);
+      font-size: 0.9rem;
+    }
+    .cravory-error-state {
+      background-color: var(--cravory-danger-bg);
+      border: 1px solid #feb2b2;
+      color: var(--cravory-danger);
+      padding: 12px;
+      border-radius: var(--cravory-radius-md);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    .cravory-success-alert {
+      background-color: var(--cravory-success-bg);
+      border: 1px solid #9ae6b4;
+      color: var(--cravory-success);
+      padding: 12px;
+      border-radius: var(--cravory-radius-md);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    .summary-row {
+      display: flex;
+      justifyContent: space-between;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+    .summary-total {
+      display: flex;
+      justifyContent: space-between;
+      padding-top: 12px;
+      border-top: 2px solid var(--cravory-surface-border);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--cravory-cocoa);
+      margin-top: 10px;
+    }
+    .delivery-box {
+      background-color: #fff9f6;
+      border: 1px dashed var(--cravory-primary-light);
+      border-radius: var(--cravory-radius-md);
+      padding: 12px;
+      margin-top: 14px;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="cravory-container">
+    <div class="header-banner">
+      <div>
+        <span class="cravory-badge">🛍️ Secure Checkout</span>
+        <h1>Complete Your Cravory Order</h1>
+        <p style="margin: 0; color: var(--cravory-text-secondary); font-size: 0.95rem;">
+          Freshly baked treats, carefully packed and ready for delivery.
+        </p>
+      </div>
+      <div>
+        <span style="color: var(--cravory-text-tertiary)">1. Cart</span>
+        <span style="color: var(--cravory-text-tertiary)"> → </span>
+        <span style="color: var(--cravory-primary); font-weight: 800;">2. Address & Review</span>
+        <span style="color: var(--cravory-text-tertiary)"> → </span>
+        <span style="color: var(--cravory-text-tertiary)">3. Payment</span>
+      </div>
+    </div>
+
+    <!-- Error & Success Messages -->
+    <div id="error-banner" class="cravory-error-state" style="display: none;"></div>
+    <div id="success-banner" class="cravory-success-alert" style="display: none;"></div>
+
+    <div class="checkout-grid">
+      <!-- Left Column: Address Selection & Review -->
+      <div>
+        <!-- STEP 1: Delivery Address -->
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h2 class="section-heading">📍 Delivery Address</h2>
+            <button id="add-address-btn" class="cravory-btn cravory-btn-primary" style="font-size: 0.85rem;">
+              + Add New Address
+            </button>
+          </div>
+
+          <!-- Existing Address Selection List -->
+          <div id="address-list">
+            <div class="address-card selected" id="addr-card-1">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input type="radio" name="deliveryAddress" id="addr-radio-1" value="addr_001" checked />
+                <label for="addr-radio-1" style="font-weight: 700; color: var(--cravory-cocoa); cursor: pointer;">
+                  Pooja Sharma
+                </label>
+                <span class="cravory-badge" style="font-size: 0.7rem; padding: 2px 6px;">Home</span>
+                <span class="cravory-badge" style="font-size: 0.7rem; padding: 2px 6px;">Default</span>
+              </div>
+              <div style="font-size: 0.85rem; color: var(--cravory-text-secondary); margin-top: 6px; padding-left: 24px;">
+                Flat 402, Sunshine Heights, MG Road, Indiranagar<br />
+                Bengaluru, Karnataka - <b>560038</b><br />
+                Phone: <b>+91 9876543210</b>
+              </div>
+            </div>
+          </div>
+
+          <!-- Address Form (Controlled via button) -->
+          <form id="address-form" style="display: none; margin-top: 18px; border-top: 1px solid var(--cravory-surface-border); padding-top: 16px;">
+            <h3 style="margin: 0 0 12px 0; color: var(--cravory-cocoa); font-size: 1.1rem;">
+              Add Delivery Address
+            </h3>
+
+            <div class="form-row">
+              <div>
+                <label class="form-label">Full Name *</label>
+                <input type="text" name="fullName" required class="cravory-input" placeholder="Full name" />
+              </div>
+              <div>
+                <label class="form-label">Phone Number *</label>
+                <input type="text" name="phone" required class="cravory-input" placeholder="10-digit mobile number" />
+              </div>
+            </div>
+
+            <div style="margin-top: 12px;">
+              <label class="form-label">Address Line 1 *</label>
+              <input type="text" name="addressLine1" required class="cravory-input" placeholder="House/Flat No., Building Name, Street" />
+            </div>
+
+            <div style="margin-top: 12px;">
+              <label class="form-label">Address Line 2</label>
+              <input type="text" name="addressLine2" class="cravory-input" placeholder="Area, Colony, Sector (Optional)" />
+            </div>
+
+            <div class="form-row-three">
+              <div>
+                <label class="form-label">City *</label>
+                <input type="text" name="city" required class="cravory-input" placeholder="City" />
+              </div>
+              <div>
+                <label class="form-label">State *</label>
+                <input type="text" name="state" required class="cravory-input" placeholder="State" />
+              </div>
+              <div>
+                <label class="form-label">Pincode *</label>
+                <input type="text" name="pincode" required class="cravory-input" placeholder="6-digit pincode" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label class="form-label">Landmark</label>
+                <input type="text" name="landmark" class="cravory-input" placeholder="Nearby famous place" />
+              </div>
+              <div>
+                <label class="form-label">Address Label</label>
+                <select name="label" class="cravory-select">
+                  <option value="Home">Home</option>
+                  <option value="Work">Work</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin: 14px 0;">
+              <label style="font-size: 0.85rem; cursor: pointer; color: var(--cravory-cocoa); font-weight: 500;">
+                <input type="checkbox" name="isDefault" /> Set as default delivery address
+              </label>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 16px;">
+              <button type="submit" class="cravory-btn cravory-btn-primary">Save Address</button>
+              <button type="button" id="cancel-address-btn" class="cravory-btn cravory-btn-secondary">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- STEP 2: Review Order Items -->
+        <div class="card">
+          <h2 class="section-heading" style="margin-bottom: 14px;">🧁 Review Order Items</h2>
+          <div style="border: 1px solid var(--cravory-surface-border); border-radius: 10px; overflow: hidden;">
+            <div style="background: #f8fafc; padding: 10px 14px; font-weight: 700; color: var(--cravory-cocoa); font-size: 0.9rem;">
+              🧁 Le Petit Artisan Bakery (Subtotal: ₹650)
+            </div>
+            <div style="padding: 12px 14px; font-size: 0.85rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span>Belgian Chocolate Truffle Cake (Qty: 1 × ₹450)</span>
+                <b>₹450</b>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Almond Butter Croissants (Qty: 2 × ₹100)</span>
+                <b>₹200</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Order Summary -->
+      <div>
+        <div class="card">
+          <h3 class="section-heading" style="font-size: 1.15rem; margin-bottom: 16px;">Order Summary</h3>
+
+          <!-- Promo Coupon Section -->
+          <div style="padding: 12px 0; border-top: 1px solid var(--cravory-surface-border); border-bottom: 1px solid var(--cravory-surface-border); margin-bottom: 14px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 700; color: var(--cravory-cocoa); margin-bottom: 6px;">
+              🎟️ Have a promo / coupon code?
+            </label>
+            <form id="coupon-form" style="display: flex; gap: 8px;">
+              <input type="text" id="coupon-input" placeholder="e.g. CRAVORY10" class="cravory-input" style="flex: 1; text-transform: uppercase;" />
+              <button type="submit" id="apply-coupon-btn" class="cravory-btn cravory-btn-secondary">Apply</button>
+            </form>
+            <div id="coupon-message" class="cravory-coupon-msg" style="display: none; font-size: 0.8rem; margin-top: 6px; font-weight: 600;"></div>
+          </div>
+
+          <div class="summary-row">
+            <span>Items Total (3 units):</span>
+            <b id="items-total">₹650</b>
+          </div>
+
+          <div id="coupon-discount-row" class="summary-row" style="display: none; color: var(--cravory-success);">
+            <span>Coupon Discount (<span id="coupon-code-label"></span>):</span>
+            <b id="coupon-discount-amount">-₹0</b>
+          </div>
+
+          <div class="summary-row">
+            <span>Delivery Fee:</span>
+            <b style="color: var(--cravory-success);">FREE</b>
+          </div>
+
+          <div class="summary-total">
+            <span>Total Amount:</span>
+            <span id="total-amount">₹650</span>
+          </div>
+
+          <div class="delivery-box" id="delivering-box">
+            <div style="color: var(--cravory-text-tertiary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
+              Delivering to:
+            </div>
+            <div id="delivering-details" style="margin-top: 4px;">
+              <b>Pooja Sharma</b> (+91 9876543210)<br />
+              Flat 402, Sunshine Heights, Bengaluru - 560038
+            </div>
+          </div>
+
+          <button
+            id="proceed-to-payment"
+            class="cravory-btn cravory-btn-primary cravory-btn-lg"
+            style="width: 100%; margin-top: 16px;"
+          >
+            Proceed to Secure Payment →
+          </button>
+
+          <div style="text-align: center; margin-top: 12px; font-size: 0.8rem; color: var(--cravory-text-tertiary);">
+            🔒 Safe & Secure Razorpay Payment
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State management mirroring Checkout.jsx
+    let subtotal = 650;
+    let appliedDiscount = 0;
+    let selectedAddressId = 'addr_001';
+
+    const addBtn = document.getElementById('add-address-btn');
+    const cancelBtn = document.getElementById('cancel-address-btn');
+    const addressForm = document.getElementById('address-form');
+    const couponForm = document.getElementById('coupon-form');
+    const couponInput = document.getElementById('coupon-input');
+    const couponMsg = document.getElementById('coupon-message');
+    const totalAmount = document.getElementById('total-amount');
+    const couponDiscountRow = document.getElementById('coupon-discount-row');
+    const couponDiscountAmount = document.getElementById('coupon-discount-amount');
+    const couponCodeLabel = document.getElementById('coupon-code-label');
+    const errorBanner = document.getElementById('error-banner');
+    const successBanner = document.getElementById('success-banner');
+    const proceedBtn = document.getElementById('proceed-to-payment');
+
+    addBtn.addEventListener('click', () => {
+      addressForm.style.display = 'block';
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      addressForm.style.display = 'none';
+      addressForm.reset();
+    });
+
+    // Address form submission (calls /api/addresses)
+    addressForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBanner.style.display = 'none';
+      successBanner.style.display = 'none';
+
+      const formData = new FormData(addressForm);
+      const payload = {
+        fullName: formData.get('fullName'),
+        phone: formData.get('phone'),
+        addressLine1: formData.get('addressLine1'),
+        addressLine2: formData.get('addressLine2'),
+        city: formData.get('city'),
+        state: formData.get('state'),
+        pincode: formData.get('pincode'),
+        landmark: formData.get('landmark'),
+        label: formData.get('label'),
+        isDefault: formData.get('isDefault') === 'on'
+      };
+
+      try {
+        const res = await fetch('/api/addresses', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.message || 'Failed to save address');
+        }
+
+        successBanner.innerText = 'New address added successfully.';
+        successBanner.style.display = 'block';
+        addressForm.style.display = 'none';
+        addressForm.reset();
+      } catch (err) {
+        errorBanner.innerText = err.message;
+        errorBanner.style.display = 'block';
+      }
+    });
+
+    // Coupon form submission (calls /api/coupons/apply)
+    couponForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const code = couponInput.value.trim().toUpperCase();
+      if (!code) return;
+
+      try {
+        const res = await fetch('/api/coupons/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code, orderTotal: subtotal })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Invalid coupon code');
+
+        appliedDiscount = data.discountAmount || 50;
+        couponCodeLabel.innerText = data.code || code;
+        couponDiscountAmount.innerText = `-₹${appliedDiscount}`;
+        couponDiscountRow.style.display = 'flex';
+        totalAmount.innerText = `₹${subtotal - appliedDiscount}`;
+        couponMsg.innerText = `✅ Coupon '${code}' applied! Saved ₹${appliedDiscount}`;
+        couponMsg.style.color = 'var(--cravory-success)';
+        couponMsg.style.display = 'block';
+      } catch (err) {
+        couponMsg.innerText = `❌ ${err.message}`;
+        couponMsg.style.color = 'var(--cravory-danger)';
+        couponMsg.style.display = 'block';
+      }
+    });
+
+    // Proceed to payment submission (calls /api/orders, /api/payment/create-order, and /api/payment/failed)
+    proceedBtn.addEventListener('click', async () => {
+      errorBanner.style.display = 'none';
+      if (!selectedAddressId) {
+        errorBanner.innerText = 'Please select or add a delivery address to proceed.';
+        errorBanner.style.display = 'block';
+        return;
+      }
+
+      proceedBtn.disabled = true;
+      proceedBtn.innerText = 'Processing Order...';
+
+      try {
+        // Step 1: Create Order
+        const orderRes = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderItems: [{ product: 'prod_123', qty: 1 }],
+            shippingAddress: { id: selectedAddressId }
+          })
+        });
+        const orderData = await orderRes.json();
+        if (!orderRes.ok) throw new Error(orderData.message || 'Checkout failed');
+
+        // Step 2: Create Razorpay Order
+        const payRes = await fetch('/api/payment/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: orderData._id || 'mock_ord_001' })
+        });
+        const payData = await payRes.json();
+        if (!payRes.ok) throw new Error(payData.message || 'Failed to create payment order');
+
+        // Step 3: Simulate Razorpay failure / modal dismiss callback
+        if (payData.simulateFailure) {
+          await fetch('/api/payment/failed', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId: orderData._id, reason: payData.failureReason })
+          });
+          throw new Error(`Payment failed: ${payData.failureReason || 'Transaction declined'}. You can retry payment from My Orders.`);
+        }
+
+        if (payData.simulateDismiss) {
+          await fetch('/api/payment/failed', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId: orderData._id, reason: 'Modal closed by customer' })
+          });
+          throw new Error('Payment was cancelled. Your order has been saved and can be retried anytime from My Orders.');
+        }
+      } catch (err) {
+        errorBanner.innerText = err.message;
+        errorBanner.style.display = 'block';
+      } finally {
+        proceedBtn.disabled = false;
+        proceedBtn.innerText = 'Proceed to Secure Payment →';
+      }
+    });
+  </script>
+</body>
+</html>
